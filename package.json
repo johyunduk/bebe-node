@@ -14,6 +14,7 @@
     "start": "pm2 start ecosystem.config.js",
     "startOnly": "pm2 start ecosystem.config.js --only",
     "start1": "npm run startOnly -- diary-server",
+    "restart": "npm run clean:bc && npm run start",
     "e2e:worker": "TZ=Asia/Seoul jest --testMatch **/diary-server/spec/***/**/*.spec*.ts --bail --runInBand --verbose",
     "e2e:worker:regex": "TZ=Asia/Seoul jest --testMatch **/diary-server/spec/***/**/*.spec*.ts --bail --runInBand --verbose --watch -t",
     "e2e:worker:cover": "TZ=Asia/Seoul jest --coverage --testMatch **/diary-server/spec/***/**/*.spec*.ts --bail --runInBand --verbose --watch -t"
