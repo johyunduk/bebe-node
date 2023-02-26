@@ -28,11 +28,6 @@ function define () {
     {
       freezeTableName: true,
       indexes: [{ fields: ['email'], unique: true }],
-      defaultScope: {
-        attributes: {
-          exclude: [],
-        },
-      },
     },
   )
 
