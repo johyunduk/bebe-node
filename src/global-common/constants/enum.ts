@@ -5,4 +5,5 @@ export enum JwtTokenType {
 
 export enum UserType {
   Admin = 'Admin',
+  Diary = 'Diary'
 }

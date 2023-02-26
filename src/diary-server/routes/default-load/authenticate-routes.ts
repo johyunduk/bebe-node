@@ -1,15 +1,58 @@
 import { Router } from 'express'
 import asyncHandler from '@global-common/server/routes/helper/asyncHandler'
-import { controllerTest } from '@diary-server/controller/authenticate-controller'
+import { userJoin, userLogin, userLogout } from '@diary-server/controller/authenticate-controller'
+import Joi from 'joi'
+import { validateInputData } from '@global-common/utils/validator'
+import { sendOk } from '@global-common/server/routes/helper/utils'
+import { diaryGuard, reissueGuard } from '@diary-server/routes/middleware/userGuard'
+import { makeNewAccessToken } from '@global-common/utils/make-jwt'
+import { UserType } from '@global-common/constants/enum'
 
 export default function authenticateRoutes (router = Router()) {
-  //
-  router.get('/diary/auth/test', asyncHandler(testRoute))
+  // 다이어리 사용자 회원가입
+  router.post('/diary/auth/join', asyncHandler(postJoin))
+  // 다이어리 사용자 로그인
+  router.post('/diary/auth/login', asyncHandler(postLogin))
+  // 다이어리 사용자 로그아웃
+  router.post('/diary/auth/logout', diaryGuard, asyncHandler(postLogout))
+  // 다이어리 사용자 신규 accessToken 발급
+  router.put('/diary/auth/tokenRefresh', reissueGuard, asyncHandler(putTokenRefresh))
 
-  async function testRoute (req, res) {
-    const result = await controllerTest()
+  async function postJoin (req, res) {
+    const body = validateInputData(req.body, {
+      name: Joi.string().required(),
+      email: Joi.string().required(),
+      password: Joi.string().min(8).required(),
+      gender: Joi.string().required(),
+      birthDate: Joi.date().required(),
+    })
 
-    res.send(result)
+    await userJoin(body)
+
+    sendOk(res)
+  }
+
+  async function postLogin (req, res) {
+    const { email, password } = validateInputData(req.body, {
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    })
+
+    const result = await userLogin(email, password)
+
+    res.json(result)
+  }
+
+  async function postLogout (req, res) {
+    await userLogout(req.user.id)
+
+    sendOk(res)
+  }
+
+  async function putTokenRefresh (req, res) {
+    const result = makeNewAccessToken(req.user.id, UserType.Diary)
+
+    res.json(result)
   }
 
   return router

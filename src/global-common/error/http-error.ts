@@ -95,6 +95,13 @@ export class Conflict extends AppError {
   }
 }
 
+export class BadEntity extends AppError {
+  static STATUS = 422
+  constructor (code, message, status = BadEntity.STATUS) {
+    super(code, message, status)
+  }
+}
+
 export class InternalServerError extends AppError {
   static STATUS = 500
   constructor (code = INTERNAL_SERVER_PROBLEM, message, status = InternalServerError.STATUS) {
