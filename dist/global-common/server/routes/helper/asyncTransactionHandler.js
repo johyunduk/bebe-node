@@ -1,0 +1,43 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _dbSetup = require("@global-common/db/db-setup");
+var _logger = require("../../../utils/logger");
+const logger = (0, _logger.getLogger)('asyncTransactionHandler.ts');
+const defaultErrorHandler = console.error;
+const asyncTransactionHandler = route => (req, res, next = defaultErrorHandler) => {
+  Promise.resolve(async function task() {
+    const orgSend = res.send;
+    let flushSend;
+    res.send = function (data) {
+      flushSend = () => {
+        res.send = orgSend;
+        res.send(data);
+      };
+    };
+    try {
+      logger.info('Start transaction for ', route.name);
+      await (0, _dbSetup.getDB)().transaction(async () => {
+        await route(req, res, next);
+      });
+      logger.info('Commit transaction for ', route.name); // 여기 왔다는 것은 transaction의 commit이 수행된 것임!
+    } catch (err) {
+      res.send = orgSend; // ErrorHandler에서 에러 메시저 전송할 수 있도록 되돌려 놓음.
+      logger.debug('Abort transaction err:', err.message);
+      logger.info('Abort transaction for ', route.name);
+      throw err;
+    } finally {
+      // Transaction 처리가 모두 마무리 되면 그 때 send해줌.
+      if (flushSend) {
+        logger.info('Finish send for ', route.name);
+        flushSend();
+      }
+    }
+  }()).catch(next);
+};
+var _default = asyncTransactionHandler;
+exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJsb2dnZXIiLCJnZXRMb2dnZXIiLCJkZWZhdWx0RXJyb3JIYW5kbGVyIiwiY29uc29sZSIsImVycm9yIiwiYXN5bmNUcmFuc2FjdGlvbkhhbmRsZXIiLCJyb3V0ZSIsInJlcSIsInJlcyIsIm5leHQiLCJQcm9taXNlIiwicmVzb2x2ZSIsInRhc2siLCJvcmdTZW5kIiwic2VuZCIsImZsdXNoU2VuZCIsImRhdGEiLCJpbmZvIiwibmFtZSIsImdldERCIiwidHJhbnNhY3Rpb24iLCJlcnIiLCJkZWJ1ZyIsIm1lc3NhZ2UiLCJjYXRjaCJdLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3NyYy9nbG9iYWwtY29tbW9uL3NlcnZlci9yb3V0ZXMvaGVscGVyL2FzeW5jVHJhbnNhY3Rpb25IYW5kbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGdldERCIH0gZnJvbSAnQGdsb2JhbC1jb21tb24vZGIvZGItc2V0dXAnXHJcbmltcG9ydCB7IGdldExvZ2dlciB9IGZyb20gJy4uLy4uLy4uL3V0aWxzL2xvZ2dlcidcclxuY29uc3QgbG9nZ2VyID0gZ2V0TG9nZ2VyKCdhc3luY1RyYW5zYWN0aW9uSGFuZGxlci50cycpXHJcblxyXG5jb25zdCBkZWZhdWx0RXJyb3JIYW5kbGVyID0gY29uc29sZS5lcnJvclxyXG5cclxuY29uc3QgYXN5bmNUcmFuc2FjdGlvbkhhbmRsZXIgPSAocm91dGUpID0+IChyZXEsIHJlcywgbmV4dCA9IGRlZmF1bHRFcnJvckhhbmRsZXIpID0+IHtcclxuICBQcm9taXNlLnJlc29sdmUoXHJcbiAgICAoYXN5bmMgZnVuY3Rpb24gdGFzayAoKSB7XHJcbiAgICAgIGNvbnN0IG9yZ1NlbmQgPSByZXMuc2VuZFxyXG4gICAgICBsZXQgZmx1c2hTZW5kXHJcbiAgICAgIHJlcy5zZW5kID0gZnVuY3Rpb24gKGRhdGEpIHtcclxuICAgICAgICBmbHVzaFNlbmQgPSAoKSA9PiB7XHJcbiAgICAgICAgICByZXMuc2VuZCA9IG9yZ1NlbmRcclxuICAgICAgICAgIHJlcy5zZW5kKGRhdGEpXHJcbiAgICAgICAgfVxyXG4gICAgICB9XHJcblxyXG4gICAgICB0cnkge1xyXG4gICAgICAgIGxvZ2dlci5pbmZvKCdTdGFydCB0cmFuc2FjdGlvbiBmb3IgJywgcm91dGUubmFtZSlcclxuICAgICAgICBhd2FpdCBnZXREQigpLnRyYW5zYWN0aW9uKGFzeW5jICgpID0+IHtcclxuICAgICAgICAgIGF3YWl0IHJvdXRlKHJlcSwgcmVzLCBuZXh0KVxyXG4gICAgICAgIH0pXHJcbiAgICAgICAgbG9nZ2VyLmluZm8oJ0NvbW1pdCB0cmFuc2FjdGlvbiBmb3IgJywgcm91dGUubmFtZSkgLy8g7Jes6riwIOyZlOuLpOuKlCDqsoPsnYAgdHJhbnNhY3Rpb27snZggY29tbWl07J20IOyImO2WieuQnCDqsoPsnoQhXHJcbiAgICAgIH0gY2F0Y2ggKGVycikge1xyXG4gICAgICAgIHJlcy5zZW5kID0gb3JnU2VuZCAvLyBFcnJvckhhbmRsZXLsl5DshJwg7JeQ65+sIOuplOyLnOyggCDsoITshqHtlaAg7IiYIOyeiOuPhOuhnSDrkJjrj4zroKQg64aT7J2MLlxyXG4gICAgICAgIGxvZ2dlci5kZWJ1ZygnQWJvcnQgdHJhbnNhY3Rpb24gZXJyOicsIGVyci5tZXNzYWdlKVxyXG4gICAgICAgIGxvZ2dlci5pbmZvKCdBYm9ydCB0cmFuc2FjdGlvbiBmb3IgJywgcm91dGUubmFtZSlcclxuICAgICAgICB0aHJvdyBlcnJcclxuICAgICAgfSBmaW5hbGx5IHtcclxuICAgICAgICAvLyBUcmFuc2FjdGlvbiDsspjrpqzqsIAg66qo65GQIOuniOustOumrCDrkJjrqbQg6re4IOuVjCBzZW5k7ZW07KSMLlxyXG4gICAgICAgIGlmIChmbHVzaFNlbmQpIHtcclxuICAgICAgICAgIGxvZ2dlci5pbmZvKCdGaW5pc2ggc2VuZCBmb3IgJywgcm91dGUubmFtZSlcclxuICAgICAgICAgIGZsdXNoU2VuZCgpXHJcbiAgICAgICAgfVxyXG4gICAgICB9XHJcbiAgICB9KSgpLFxyXG4gICkuY2F0Y2gobmV4dClcclxufVxyXG5cclxuZXhwb3J0IGRlZmF1bHQgYXN5bmNUcmFuc2FjdGlvbkhhbmRsZXJcclxuIl0sIm1hcHBpbmdzIjoiOzs7Ozs7QUFBQTtBQUNBO0FBQ0EsTUFBTUEsTUFBTSxHQUFHLElBQUFDLGlCQUFTLEVBQUMsNEJBQTRCLENBQUM7QUFFdEQsTUFBTUMsbUJBQW1CLEdBQUdDLE9BQU8sQ0FBQ0MsS0FBSztBQUV6QyxNQUFNQyx1QkFBdUIsR0FBSUMsS0FBSyxJQUFLLENBQUNDLEdBQUcsRUFBRUMsR0FBRyxFQUFFQyxJQUFJLEdBQUdQLG1CQUFtQixLQUFLO0VBQ25GUSxPQUFPLENBQUNDLE9BQU8sQ0FDWixlQUFlQyxJQUFJLEdBQUk7SUFDdEIsTUFBTUMsT0FBTyxHQUFHTCxHQUFHLENBQUNNLElBQUk7SUFDeEIsSUFBSUMsU0FBUztJQUNiUCxHQUFHLENBQUNNLElBQUksR0FBRyxVQUFVRSxJQUFJLEVBQUU7TUFDekJELFNBQVMsR0FBRyxNQUFNO1FBQ2hCUCxHQUFHLENBQUNNLElBQUksR0FBR0QsT0FBTztRQUNsQkwsR0FBRyxDQUFDTSxJQUFJLENBQUNFLElBQUksQ0FBQztNQUNoQixDQUFDO0lBQ0gsQ0FBQztJQUVELElBQUk7TUFDRmhCLE1BQU0sQ0FBQ2lCLElBQUksQ0FBQyx3QkFBd0IsRUFBRVgsS0FBSyxDQUFDWSxJQUFJLENBQUM7TUFDakQsTUFBTSxJQUFBQyxjQUFLLEdBQUUsQ0FBQ0MsV0FBVyxDQUFDLFlBQVk7UUFDcEMsTUFBTWQsS0FBSyxDQUFDQyxHQUFHLEVBQUVDLEdBQUcsRUFBRUMsSUFBSSxDQUFDO01BQzdCLENBQUMsQ0FBQztNQUNGVCxNQUFNLENBQUNpQixJQUFJLENBQUMseUJBQXlCLEVBQUVYLEtBQUssQ0FBQ1ksSUFBSSxDQUFDLEVBQUM7SUFDckQsQ0FBQyxDQUFDLE9BQU9HLEdBQUcsRUFBRTtNQUNaYixHQUFHLENBQUNNLElBQUksR0FBR0QsT0FBTyxFQUFDO01BQ25CYixNQUFNLENBQUNzQixLQUFLLENBQUMsd0JBQXdCLEVBQUVELEdBQUcsQ0FBQ0UsT0FBTyxDQUFDO01BQ25EdkIsTUFBTSxDQUFDaUIsSUFBSSxDQUFDLHdCQUF3QixFQUFFWCxLQUFLLENBQUNZLElBQUksQ0FBQztNQUNqRCxNQUFNRyxHQUFHO0lBQ1gsQ0FBQyxTQUFTO01BQ1I7TUFDQSxJQUFJTixTQUFTLEVBQUU7UUFDYmYsTUFBTSxDQUFDaUIsSUFBSSxDQUFDLGtCQUFrQixFQUFFWCxLQUFLLENBQUNZLElBQUksQ0FBQztRQUMzQ0gsU0FBUyxFQUFFO01BQ2I7SUFDRjtFQUNGLENBQUMsRUFBRyxDQUNMLENBQUNTLEtBQUssQ0FBQ2YsSUFBSSxDQUFDO0FBQ2YsQ0FBQztBQUFBLGVBRWNKLHVCQUF1QjtBQUFBIn0=
