@@ -30,7 +30,7 @@ function define () {
       indexes: [{ fields: ['email'], unique: true }],
       defaultScope: {
         attributes: {
-          exclude: ['password'],
+          exclude: [],
         },
       },
     },
