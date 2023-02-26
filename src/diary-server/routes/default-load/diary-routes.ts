@@ -10,7 +10,7 @@ export default function diaryRoutes (router = Router()) {
   // 육아일기 목록
   router.get('/diary', diaryGuard, asyncHandler(getDiaryList))
   // 육아일기 상세 조회
-  router.get('/diary/:id', diaryGuard, asyncHandler(getDiaryDetail))
+  router.get('/diary/detail/:id', diaryGuard, asyncHandler(getDiaryDetail))
   // 육아일기 작성
   router.post('/diary', diaryGuard, asyncHandler(postDiary))
 
