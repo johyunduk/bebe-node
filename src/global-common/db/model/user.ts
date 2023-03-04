@@ -11,8 +11,8 @@ export enum UserStatus {
 }
 
 export enum UserGender {
-  '남자' = '남자',
-  '여자' = '여자'
+  Male = '남자',
+  Female = '여자'
 }
 
 let UserModel

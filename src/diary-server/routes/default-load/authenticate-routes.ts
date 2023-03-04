@@ -26,7 +26,7 @@ export default function authenticateRoutes (router = Router()) {
       name: Joi.string().required(),
       email: Joi.string().required(),
       password: Joi.string().min(8).required(),
-      gender: Joi.string().required().allow(..._.keys(UserGender)),
+      gender: Joi.string().required().valid(..._.values(UserGender)),
       birthDate: Joi.date().required(),
     })
 
