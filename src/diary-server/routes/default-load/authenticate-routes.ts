@@ -1,12 +1,15 @@
 import { Router } from 'express'
+import _ from 'lodash'
+import Joi from 'joi'
+
 import asyncHandler from '@global-common/server/routes/helper/asyncHandler'
 import { userJoin, userLogin, userLogout } from '@diary-server/controller/authenticate-controller'
-import Joi from 'joi'
 import { validateInputData } from '@global-common/utils/validator'
 import { sendOk } from '@global-common/server/routes/helper/utils'
 import { diaryGuard, reissueGuard } from '@diary-server/routes/middleware/userGuard'
 import { makeNewAccessToken } from '@global-common/utils/make-jwt'
 import { UserType } from '@global-common/constants/enum'
+import { UserGender } from '@global-common/db/model/user'
 
 export default function authenticateRoutes (router = Router()) {
   // 다이어리 사용자 회원가입
@@ -23,7 +26,7 @@ export default function authenticateRoutes (router = Router()) {
       name: Joi.string().required(),
       email: Joi.string().required(),
       password: Joi.string().min(8).required(),
-      gender: Joi.string().required(),
+      gender: Joi.string().required().allow(..._.keys(UserGender)),
       birthDate: Joi.date().required(),
     })
 

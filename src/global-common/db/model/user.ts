@@ -10,6 +10,11 @@ export enum UserStatus {
     Deactivated = 'Deactivated',
 }
 
+export enum UserGender {
+  '남자' = '남자',
+  '여자' = '여자'
+}
+
 let UserModel
 
 function define () {
