@@ -19,6 +19,7 @@ function define () {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
+      gender: DataTypes.STRING,
       birthDate: DataTypes.DATE,
       userStatus: { type: DataTypes.STRING, defaultValue: UserStatus.Activated },
       refreshToken: { type: DataTypes.STRING },
