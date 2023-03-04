@@ -14,8 +14,8 @@ function define () {
     {
       title: DataTypes.STRING,
       content: DataTypes.TEXT,
-      weight: DataTypes.DECIMAL,
-      height: DataTypes.DECIMAL,
+      weight: DataTypes.DECIMAL(5, 2),
+      height: DataTypes.DECIMAL(5, 2),
       createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
       updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     },

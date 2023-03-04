@@ -1,6 +1,12 @@
 import { Router } from 'express'
 import asyncHandler from '@global-common/server/routes/helper/asyncHandler'
-import { loadDiaryDetail, loadDiaryList, saveDiary } from '@diary-server/controller/diary-controller'
+import {
+  destroyDiary,
+  loadDiaryDetail,
+  loadDiaryList,
+  saveDiary,
+  updateDiary,
+} from '@diary-server/controller/diary-controller'
 import { validateInputData } from '@global-common/utils/validator'
 import Joi from 'joi'
 import { sendOk } from '@global-common/server/routes/helper/utils'
@@ -13,6 +19,10 @@ export default function diaryRoutes (router = Router()) {
   router.get('/diary/detail/:id', diaryGuard, asyncHandler(getDiaryDetail))
   // 육아일기 작성
   router.post('/diary', diaryGuard, asyncHandler(postDiary))
+  // 육아일기 수정
+  router.put('/diary/edit/:id', diaryGuard, asyncHandler(putDiary))
+  // 육아일기 삭제
+  router.delete('/diary/delete/:id', diaryGuard, asyncHandler(deleteDiary))
 
   async function getDiaryList (req, res) {
     const result = await loadDiaryList(req.user.id)
@@ -37,6 +47,29 @@ export default function diaryRoutes (router = Router()) {
     })
 
     await saveDiary(body, req.user.id)
+
+    sendOk(res)
+  }
+
+  async function putDiary (req, res) {
+    const { id: diaryId } = req.params
+
+    const body = validateInputData(req.body, {
+      title: Joi.string(),
+      content: Joi.string(),
+      weight: Joi.number().positive(),
+      height: Joi.number().positive(),
+    })
+
+    await updateDiary(body, req.user.id, diaryId)
+
+    sendOk(res)
+  }
+
+  async function deleteDiary (req, res) {
+    const { id: diaryId } = req.params
+
+    await destroyDiary(req.user.id, diaryId)
 
     sendOk(res)
   }

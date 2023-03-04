@@ -7,4 +7,6 @@ interface DiaryInputs {
     height: number;
 }
 export declare function saveDiary(body: DiaryInputs, userId: number): Promise<void>;
+export declare function updateDiary(body: any, userId: any, diaryId: any): Promise<void>;
+export declare function destroyDiary(userId: any, diaryId: any): Promise<void>;
 export {};
