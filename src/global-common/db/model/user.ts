@@ -26,6 +26,7 @@ function define () {
       password: DataTypes.STRING,
       gender: DataTypes.STRING,
       birthDate: DataTypes.DATEONLY,
+      avatar: DataTypes.STRING,
       userStatus: { type: DataTypes.STRING, defaultValue: UserStatus.Activated },
       refreshToken: { type: DataTypes.STRING },
       createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },

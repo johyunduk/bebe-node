@@ -27,6 +27,9 @@ export const commonEnv: any = {
   JWT_SECRET_KEY: env.JWT_SECRET_KEY,
   JWT_ACCESS_EXPIRES_IN: env.JWT_ACCESS_EXPIRES_IN,
   JWT_REFRESH_EXPIRES_IN: env.JWT_REFRESH_EXPIRES_IN,
+
+  AWS_REGION: env.AWS_REGION,
+  AWS_BUCKET: env.AWS_BUCKET,
 }
 
 const dbNameFromUrl = (url, defalutVal) => (url ? url.split('/').pop() : defalutVal)
