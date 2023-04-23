@@ -12,14 +12,14 @@ import { UserType } from '@global-common/constants/enum'
 import { UserGender } from '@global-common/db/model/user'
 
 export default function authenticateRoutes (router = Router()) {
-  // 다이어리 사용자 회원가입
-  router.post('/diary/auth/join', asyncHandler(postJoin))
-  // 다이어리 사용자 로그인
-  router.post('/diary/auth/login', asyncHandler(postLogin))
-  // 다이어리 사용자 로그아웃
-  router.post('/diary/auth/logout', diaryGuard, asyncHandler(postLogout))
-  // 다이어리 사용자 신규 accessToken 발급
-  router.put('/diary/auth/tokenRefresh', reissueGuard, asyncHandler(putTokenRefresh))
+  // 사용자 회원가입
+  router.post('/auth/join', asyncHandler(postJoin))
+  // 사용자 로그인
+  router.post('/auth/login', asyncHandler(postLogin))
+  // 사용자 로그아웃
+  router.post('/auth/logout', diaryGuard, asyncHandler(postLogout))
+  // 사용자 신규 accessToken 발급
+  router.put('/auth/tokenRefresh', reissueGuard, asyncHandler(putTokenRefresh))
 
   async function postJoin (req, res) {
     const body = validateInputData(req.body, {
