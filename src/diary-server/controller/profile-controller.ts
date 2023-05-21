@@ -9,7 +9,7 @@ export async function userProfile (id: number, req) {
 
   if (!user) throw new NotFound(NO_USER, '사용자가 없습니다')
 
-  return { ...user, avatar: user.avatar ? `${req.protocol}://${req.get('host')}/uploads/images/${user.avatar}` : null }
+  return { ...user, avatar: user.avatar ? `https://api.mybebe.net/uploads/images/${user.avatar}` : null }
 }
 
 export async function updateProfile (body, id: number) {
