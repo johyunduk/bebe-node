@@ -8,7 +8,7 @@ import { saveUserAvatar, updateProfile, userProfile } from '@diary-server/contro
 import { sendOk } from '@global-common/server/routes/helper/utils'
 import { validateInputData } from '@global-common/utils/validator'
 import { UserGender } from '@global-common/db/model/user'
-import { userUpload } from '@diary-server/routes/middleware/upload-user'
+import { localUpload } from '@global-common/middleware/local-upload'
 
 export default function profileRoutes (router = Router()) {
   // 프로필 조회
@@ -16,10 +16,10 @@ export default function profileRoutes (router = Router()) {
   // 프로필 수정
   router.put('/diary/profile/edit', diaryGuard, asyncHandler(putProfile))
   // 프로필 아바타 수정
-  router.put('/diary/profile/avatar', diaryGuard, userUpload('avatar').single('avatar'), asyncHandler(putAvatar))
+  router.put('/diary/profile/avatar', diaryGuard, localUpload.single('file'), asyncHandler(putAvatar))
 
   async function getProfile (req, res) {
-    const result = await userProfile(req.user.id)
+    const result = await userProfile(req.user.id, req)
 
     res.json(result)
   }
