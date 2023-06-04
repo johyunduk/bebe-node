@@ -10,15 +10,15 @@ import { localUpload } from '@global-common/middleware/local-upload'
 
 export default function babyRoutes (router = Router()) {
   // 아이 목록
-  router.get('/baby', diaryGuard, asyncHandler(getBabyList))
+  router.get('/diary/baby', diaryGuard, asyncHandler(getBabyList))
   // 아이 등록
-  router.post('/baby', diaryGuard, asyncHandler(postBaby))
+  router.post('/diary/baby', diaryGuard, asyncHandler(postBaby))
   // 아이 수정
-  router.put('/baby/:id', diaryGuard, asyncHandler(putBaby))
+  router.put('/diary/baby/:id', diaryGuard, asyncHandler(putBaby))
   // 아이 삭제
-  router.delete('/baby/:id', diaryGuard, asyncHandler(deleteBaby))
+  router.delete('/diary/baby/:id', diaryGuard, asyncHandler(deleteBaby))
   // 아이 사진 등록
-  router.patch('/baby/:id/face', diaryGuard, localUpload.single('file'), asyncHandler(patchBabyFace))
+  router.patch('/diary/baby/:id/face', diaryGuard, localUpload.single('file'), asyncHandler(patchBabyFace))
 
   async function getBabyList (req, res) {
     const result = await loadBabyList(req.user.id)

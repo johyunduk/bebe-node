@@ -12,11 +12,11 @@ import { localUpload } from '@global-common/middleware/local-upload'
 
 export default function profileRoutes (router = Router()) {
   // 프로필 조회
-  router.get('/diary/profile', diaryGuard, asyncHandler(getProfile))
+  router.get('/profile', diaryGuard, asyncHandler(getProfile))
   // 프로필 수정
-  router.put('/diary/profile/edit', diaryGuard, asyncHandler(putProfile))
+  router.put('/profile/edit', diaryGuard, asyncHandler(putProfile))
   // 프로필 아바타 수정
-  router.put('/diary/profile/avatar', diaryGuard, localUpload.single('file'), asyncHandler(putAvatar))
+  router.put('/profile/avatar', diaryGuard, localUpload.single('file'), asyncHandler(putAvatar))
 
   async function getProfile (req, res) {
     const result = await userProfile(req.user.id, req)
