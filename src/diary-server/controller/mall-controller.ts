@@ -1,6 +1,6 @@
 import MallItem from '@global-common/db/model/mall-item'
 import Category from '@global-common/db/model/category'
-import { BadRequest, NO_DATA } from '@global-common/error/http-error'
+import { ALREADY_EXISTS, BadRequest, NO_DATA } from '@global-common/error/http-error'
 import ItemCategory from '@global-common/db/model/item-category'
 import { getLogger } from '@global-common/utils/logger'
 
@@ -9,7 +9,7 @@ const logger = getLogger('mall-controller.ts')
 export async function saveCategory (name: string) {
   const category = await Category().findOne({ where: { name } })
 
-  if (category) throw new BadRequest(NO_DATA, '이미 존재하는 카테고리입니다.')
+  if (category) throw new BadRequest(ALREADY_EXISTS, '이미 존재하는 카테고리입니다.')
 
   await Category().create({ name })
 }
