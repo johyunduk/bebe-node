@@ -12,6 +12,7 @@ function define () {
   MallItemModel = getDB().define(
     'mall_item',
     {
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       name: DataTypes.STRING,
       price: DataTypes.INTEGER,
       description: DataTypes.STRING,
