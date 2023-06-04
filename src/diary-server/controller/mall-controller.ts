@@ -81,3 +81,9 @@ export async function fetchItemList (param: {categoryId?: number, page?: number}
     items,
   }
 }
+
+export async function fetchCategoryList () {
+  return Category().findAll({
+    attributes: ['id', 'name'],
+  })
+}

@@ -13,4 +13,5 @@ export declare function fetchItemList(param: {
     count: any;
     items: any;
 }>;
+export declare function fetchCategoryList(): Promise<any>;
 export {};

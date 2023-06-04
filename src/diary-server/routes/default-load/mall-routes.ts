@@ -3,7 +3,7 @@ import asyncHandler from '@global-common/server/routes/helper/asyncHandler'
 import { adminGuard, diaryGuard } from '@diary-server/routes/middleware/userGuard'
 import { validateInputData } from '@global-common/utils/validator'
 import Joi from 'joi'
-import { fetchItemList, saveCategory, saveItem } from '@diary-server/controller/mall-controller'
+import { fetchCategoryList, fetchItemList, saveCategory, saveItem } from '@diary-server/controller/mall-controller'
 import { sendOk } from '@global-common/server/routes/helper/utils'
 import { localUpload } from '@global-common/middleware/local-upload'
 
@@ -12,6 +12,8 @@ export default function mallRoutes (router = Router()) {
   router.get('/mall/size', asyncHandler(getSizeList))
   // 쇼핑몰 카테고리 등록
   router.post('/mall/category', diaryGuard, asyncHandler(postMallCategory))
+  // 쇼핑몰 카테고리 목록
+  router.get('/mall/category', diaryGuard, asyncHandler(getMallCategory))
   // 쇼핑몰 상품 등록
   router.post('/mall/item', diaryGuard, localUpload.single('file'), asyncHandler(postMallItem))
   // 쇼핑몰 리스트 조회
@@ -39,6 +41,12 @@ export default function mallRoutes (router = Router()) {
     await saveCategory(name)
 
     sendOk(res)
+  }
+
+  async function getMallCategory (req, res) {
+    const result = await fetchCategoryList()
+
+    res.json(result)
   }
 
   async function postMallItem (req, res) {
