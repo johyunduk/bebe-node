@@ -65,6 +65,11 @@ export default function runServer ({
     // app.use(cors(corsOptions))
     app.use(cors())
 
+    app.use((req, res, next) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+      next()
+    })
+
     app.use('/uploads', express.static('uploads'))
     app.use(requestIp.mw())
 
