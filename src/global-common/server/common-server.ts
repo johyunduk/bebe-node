@@ -11,6 +11,7 @@ import { corsOptions, IS_REAL_PRODUCTION } from '../constants/common'
 import { getLogger } from '../utils/logger'
 import requestIp from 'request-ip'
 import { connectDb as commonConnectDb } from '@global-common/db/db-setup'
+import path from 'path'
 
 const logger = getLogger('common-server.ts')
 const app = express()
@@ -63,7 +64,7 @@ export default function runServer ({
     app.use(nocache())
     // app.use(cors(corsOptions))
     app.use(cors())
-    app.use('/uploads', express.static('uploads'))
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
     app.use(requestIp.mw())
 
     app.use(main())
