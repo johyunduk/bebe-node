@@ -74,7 +74,7 @@ export default function runServer ({
       next()
     })
 
-    app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+    app.use('/uploads', express.static('uploads'))
     app.use(requestIp.mw())
 
     app.use(main())
