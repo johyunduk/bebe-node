@@ -62,8 +62,8 @@ export default function runServer ({
     app.use(helmet())
     app.use(nocache())
     // app.use(cors(corsOptions))
-    app.use('/uploads', express.static('uploads'))
     app.use(cors())
+    app.use('/uploads', express.static('uploads'))
     app.use(requestIp.mw())
 
     app.use(main())
