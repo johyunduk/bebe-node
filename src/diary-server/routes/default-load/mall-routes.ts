@@ -3,7 +3,13 @@ import asyncHandler from '@global-common/server/routes/helper/asyncHandler'
 import { adminGuard, diaryGuard } from '@diary-server/routes/middleware/userGuard'
 import { validateInputData } from '@global-common/utils/validator'
 import Joi from 'joi'
-import { fetchCategoryList, fetchItemList, saveCategory, saveItem } from '@diary-server/controller/mall-controller'
+import {
+  fetchCategoryList,
+  fetchItemDetail,
+  fetchItemList,
+  saveCategory,
+  saveItem,
+} from '@diary-server/controller/mall-controller'
 import { sendOk } from '@global-common/server/routes/helper/utils'
 import { localUpload } from '@global-common/middleware/local-upload'
 
@@ -18,6 +24,8 @@ export default function mallRoutes (router = Router()) {
   router.post('/mall/item', diaryGuard, localUpload.single('file'), asyncHandler(postMallItem))
   // 쇼핑몰 리스트 조회
   router.get('/mall/item', diaryGuard, asyncHandler(getMallList))
+  // 쇼핑몰 상풍 상세
+  router.get('/mall/item/:id', diaryGuard, asyncHandler(getMallDetail))
 
   async function getSizeList (req, res) {
     const sizeList = [
@@ -72,6 +80,12 @@ export default function mallRoutes (router = Router()) {
     })
 
     const result = await fetchItemList(param)
+
+    res.json(result)
+  }
+
+  async function getMallDetail (req, res) {
+    const result = await fetchItemDetail(req.params.id)
 
     res.json(result)
   }

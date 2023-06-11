@@ -87,3 +87,23 @@ export async function fetchCategoryList () {
     attributes: ['id', 'name'],
   })
 }
+
+export async function fetchItemDetail (id: number) {
+  const item = await MallItem().findOne({
+    where: { id },
+    include: {
+      model: ItemCategory(),
+      attributes: ['id'],
+      include: {
+        model: Category(),
+        attributes: ['name'],
+      },
+    },
+  })
+
+  if (!item) throw new BadRequest(NO_DATA, '존재하지 않는 상품입니다.')
+
+  item.image = item.image ? `https://api.mybebe.net/uploads/images/${item.image}` : null
+
+  return item
+}
