@@ -107,3 +107,22 @@ export async function fetchItemDetail (id: number) {
 
   return item
 }
+
+interface modifyParam {
+  id: number
+  categoryId: number
+  name: string
+  price: number
+  description: string
+}
+export async function modifyItem (param: modifyParam, file) {
+  const { id } = param
+
+  const item = await MallItem().findOne({ where: { id } })
+
+  if (!item) throw new BadRequest(NO_DATA, '존재하지 않는 상품입니다.')
+
+  const fileName = file?.filename
+
+  await item.update({ ...param, image: fileName })
+}

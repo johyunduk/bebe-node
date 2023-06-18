@@ -6,7 +6,7 @@ import Joi from 'joi'
 import {
   fetchCategoryList,
   fetchItemDetail,
-  fetchItemList,
+  fetchItemList, modifyItem,
   saveCategory,
   saveItem,
 } from '@diary-server/controller/mall-controller'
@@ -24,8 +24,10 @@ export default function mallRoutes (router = Router()) {
   router.post('/mall/item', diaryGuard, localUpload.single('file'), asyncHandler(postMallItem))
   // 쇼핑몰 리스트 조회
   router.get('/mall/item', diaryGuard, asyncHandler(getMallList))
-  // 쇼핑몰 상풍 상세
+  // 쇼핑몰 상품 상세
   router.get('/mall/item/:id', diaryGuard, asyncHandler(getMallDetail))
+  // 쇼핑몰 상품 수정
+  router.put('/mall/item/:id', diaryGuard, localUpload.single('file'), asyncHandler(putMallItem))
 
   async function getSizeList (req, res) {
     const sizeList = [
@@ -88,6 +90,23 @@ export default function mallRoutes (router = Router()) {
     const result = await fetchItemDetail(req.params.id)
 
     res.json(result)
+  }
+
+  async function putMallItem (req, res) {
+    const { body, params } = req
+
+    const param = validateInputData(body, {
+      categoryId: Joi.number().required(),
+      name: Joi.string().required(),
+      price: Joi.number().required(),
+      description: Joi.string().required(),
+    })
+
+    param.id = params.id
+
+    await modifyItem(param, req.file)
+
+    sendOk(res)
   }
 
   return router

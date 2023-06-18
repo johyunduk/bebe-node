@@ -15,4 +15,12 @@ export declare function fetchItemList(param: {
 }>;
 export declare function fetchCategoryList(): Promise<any>;
 export declare function fetchItemDetail(id: number): Promise<any>;
+interface modifyParam {
+    id: number;
+    categoryId: number;
+    name: string;
+    price: number;
+    description: string;
+}
+export declare function modifyItem(param: modifyParam, file: any): Promise<void>;
 export {};
