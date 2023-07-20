@@ -48,6 +48,7 @@ export async function userLogin (email: string, password: string) {
     user: {
       id: user.id,
       name: user.name,
+      isAdmin: user.isAdmin,
     },
   }
 }

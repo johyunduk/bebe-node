@@ -29,6 +29,7 @@ function define () {
       avatar: DataTypes.STRING,
       userStatus: { type: DataTypes.STRING, defaultValue: UserStatus.Activated },
       refreshToken: { type: DataTypes.STRING },
+      isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
       createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
       updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     },

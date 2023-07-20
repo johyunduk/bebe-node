@@ -12,6 +12,7 @@ export declare function userLogin(email: string, password: string): Promise<{
     user: {
         id: any;
         name: any;
+        isAdmin: any;
     };
 }>;
 export declare function userLogout(id: number): Promise<void>;
