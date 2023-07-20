@@ -23,7 +23,7 @@ export default function mallRoutes (router = Router()) {
   // 쇼핑몰 상품 등록
   router.post('/mall/item', diaryGuard, localUpload.single('file'), asyncHandler(postMallItem))
   // 쇼핑몰 리스트 조회
-  router.get('/mall/item', diaryGuard, asyncHandler(getMallList))
+  router.get('/mall/item', asyncHandler(getMallList))
   // 쇼핑몰 상품 상세
   router.get('/mall/item/:id', diaryGuard, asyncHandler(getMallDetail))
   // 쇼핑몰 상품 수정
