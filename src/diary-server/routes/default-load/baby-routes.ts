@@ -45,7 +45,6 @@ export default function babyRoutes (router = Router()) {
       name: Joi.string().required(),
       birthDate: Joi.date(),
       gender: Joi.string(),
-      face: Joi.string(),
       expectDate: Joi.date(),
       pregnantDate: Joi.date(),
     })
