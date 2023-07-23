@@ -41,6 +41,7 @@ export default function babyRoutes (router = Router()) {
   }
 
   async function putBaby (req, res) {
+    const babyId = req.params.id
     const params = validateInputData(req.body, {
       name: Joi.string().required(),
       birthDate: Joi.date(),
@@ -49,7 +50,7 @@ export default function babyRoutes (router = Router()) {
       pregnantDate: Joi.date(),
     })
 
-    await modifyBaby(params, req.params.id)
+    await modifyBaby(params, babyId)
 
     sendOk(res)
   }
