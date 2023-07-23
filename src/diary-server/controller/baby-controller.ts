@@ -42,7 +42,7 @@ export async function removeBaby (id) {
 }
 
 export async function saveBabyFace (userId, babyId, file) {
-  const baby = await UserBaby().findOne({ id: babyId })
+  const baby = await UserBaby().findOne({ where: { id: babyId } })
 
   if (!baby) throw new BadRequest(NO_DATA, '해당 아이가 없습니다.')
 
