@@ -26,7 +26,7 @@ export async function saveBaby (params, userId) {
 }
 
 export async function modifyBaby (params, id) {
-  const baby = await UserBaby().findOne({ id })
+  const baby = await UserBaby().findOne({ where: { id } })
 
   if (!baby) throw new BadRequest(NO_DATA, '해당 아이가 없습니다.')
 
