@@ -115,16 +115,14 @@ interface modifyParam {
   price: number
   description: string
 }
-export async function modifyItem (param: modifyParam, file) {
+export async function modifyItem (param: modifyParam) {
   const { id } = param
 
   const item = await MallItem().findOne({ where: { id } })
 
   if (!item) throw new BadRequest(NO_DATA, '존재하지 않는 상품입니다.')
 
-  const fileName = file?.filename
-
-  await item.update({ ...param, image: fileName })
+  await item.update({ ...param })
 
   const itemCategory = await ItemCategory().findOne({ where: { mallItemId: id } })
 

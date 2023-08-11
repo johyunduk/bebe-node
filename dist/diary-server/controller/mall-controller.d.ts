@@ -22,5 +22,5 @@ interface modifyParam {
     price: number;
     description: string;
 }
-export declare function modifyItem(param: modifyParam, file: any): Promise<void>;
+export declare function modifyItem(param: modifyParam): Promise<void>;
 export {};

@@ -104,7 +104,7 @@ export default function mallRoutes (router = Router()) {
 
     param.id = params.id
 
-    await modifyItem(param, req.file)
+    await modifyItem(param)
 
     sendOk(res)
   }
