@@ -1,5 +1,5 @@
 import UserBaby from '@global-common/db/model/user-baby'
-import { BadRequest, NO_DATA } from '@global-common/error/http-error'
+import { BadRequest, INVALID_REQUEST, NO_DATA } from '@global-common/error/http-error'
 
 export async function loadBabyList (userId: number) {
   const list = await UserBaby().findAll({
@@ -19,6 +19,10 @@ export async function loadBabyList (userId: number) {
 }
 
 export async function saveBaby (params, userId) {
+  const baby = UserBaby().findOne({ where: { userId } })
+
+  if (baby) throw new BadRequest(INVALID_REQUEST, '이미 등록된 아이가 있습니다.')
+
   await UserBaby().create({
     ...params,
     userId,
