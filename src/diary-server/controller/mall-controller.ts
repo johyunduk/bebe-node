@@ -93,10 +93,10 @@ export async function fetchItemDetail (id: number) {
     where: { id },
     include: {
       model: ItemCategory(),
-      attributes: ['id'],
+      attributes: ['id', 'categoryId'],
       include: {
         model: Category(),
-        attributes: ['name'],
+        attributes: ['id', 'name'],
       },
     },
   })
