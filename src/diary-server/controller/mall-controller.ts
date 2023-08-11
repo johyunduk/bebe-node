@@ -125,4 +125,8 @@ export async function modifyItem (param: modifyParam, file) {
   const fileName = file?.filename
 
   await item.update({ ...param, image: fileName })
+
+  const itemCategory = await ItemCategory().findOne({ where: { mallItemId: id } })
+
+  await itemCategory.update({ categoryId: param.categoryId })
 }
